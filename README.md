@@ -72,7 +72,7 @@ In a web-browser you can navigate to the IP of your device something like `http:
 
 You will see something like this in your browser:
 
-![2024-09-09_16-14-59](https://github.com/user-attachments/assets/8a452b06-8b6e-4330-a958-22d48ce72e75)
 
+![2024-09-09_16-34-37](https://github.com/user-attachments/assets/545f5c88-f40c-4fa1-82f1-50317dcfc75c)
 
 
