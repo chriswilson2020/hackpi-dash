@@ -5,17 +5,27 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
 import os
+import argparse
+
+# Parse command-line arguments for the directory containing CSV files
+parser = argparse.ArgumentParser(description='Specify the directory containing CSV files.')
+parser.add_argument('--csv-dir', type=str, default='.', help='Directory containing CSV files')
+args = parser.parse_args()
+
+# Directory containing CSV files
+csv_dir = args.csv_dir
 
 # Initialize the Dash app
 app = dash.Dash(__name__)
 
 # Function to list all CSV files in the directory
 def list_csv_files():
-    return [f for f in os.listdir('.') if f.endswith('.csv')]
+    return [f for f in os.listdir(csv_dir) if f.endswith('.csv')]
 
 # Load the selected CSV file
 def load_data(file_name):
-    df = pd.read_csv(file_name)
+    file_path = os.path.join(csv_dir, file_name)
+    df = pd.read_csv(file_path)
     
     # Rename PM columns to simpler names if they contain special characters
     df.rename(columns={
@@ -36,7 +46,7 @@ app.layout = html.Div(children=[
     dcc.Dropdown(
         id='file-dropdown',
         options=[{'label': f, 'value': f} for f in list_csv_files()],
-        value=list_csv_files()[0],  # Set default value to the first CSV file
+        value=list_csv_files()[0] if list_csv_files() else None,  # Set default value to the first CSV file
         clearable=False
     ),
 
