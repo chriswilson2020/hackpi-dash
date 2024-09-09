@@ -40,14 +40,19 @@ def load_data(file_name):
 
 # Create the layout for the app
 app.layout = html.Div(children=[
-    html.H1(children='Sensor Data Dashboard'),
+    html.H1(children='HackBerry Pi Environmental Sensor Data Web Dashboard'),
 
     # Dropdown to select the CSV file
     dcc.Dropdown(
         id='file-dropdown',
-        options=[{'label': f, 'value': f} for f in list_csv_files()],
-        value=list_csv_files()[0] if list_csv_files() else None,  # Set default value to the first CSV file
         clearable=False
+    ),
+
+    # Interval component to refresh data every 10 seconds
+    dcc.Interval(
+        id='interval-component',
+        interval=60*1000,  # Update every 10 seconds
+        n_intervals=0
     ),
 
     # Plots
@@ -58,6 +63,26 @@ app.layout = html.Div(children=[
     dcc.Graph(id='voc-graph'),
     dcc.Graph(id='nox-graph')
 ])
+
+# Callback to update the dropdown list of CSV files periodically
+@app.callback(
+    Output('file-dropdown', 'options'),
+    [Input('interval-component', 'n_intervals')]
+)
+def update_dropdown(n):
+    csv_files = list_csv_files()
+    return [{'label': f, 'value': f} for f in csv_files]
+
+# Callback to update the selected file in the dropdown
+@app.callback(
+    Output('file-dropdown', 'value'),
+    [Input('file-dropdown', 'options')],
+    [Input('interval-component', 'n_intervals')]
+)
+def set_default_file(options, n):
+    if options:
+        return options[0]['value']  # Select the first CSV file as default
+    return None
 
 # Callback to update the graphs based on the selected file
 @app.callback(
@@ -70,6 +95,9 @@ app.layout = html.Div(children=[
     [Input('file-dropdown', 'value')]
 )
 def update_graphs(selected_file):
+    if selected_file is None:
+        return [{}] * 6  # Return empty graphs if no file is selected
+    
     # Load the data for the selected file
     df = load_data(selected_file)
     
