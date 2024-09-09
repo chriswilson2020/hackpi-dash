@@ -1,10 +1,15 @@
 # hackpi-dash
-Dash Plot server for the Pi Zero 2W
+## Introduction ##
+This script is designed to go along with my hackberry pi dashboard which can be found [here](https://github.com/chriswilson2020/hack-environment-monitor)
+We can use this to make a live view remote (all be it http not https but I access it over a ssl vpn so doesn't matter much) dashboard for our little environmental monitor
 
+### Background ###
 Unfortunately as of September 2024 it is a challenge (pain in the ass) to use flask and plot.ly to make a nice simple webserver to display the output of your measurements on a Raspberry Pi Zero 2W because many of the newer python modules seem to be incompatible with the older Arm v6 architecture of the Pi Zero 2W we end up with rather cryptic Illegal Instruction errors.  This is my incredibly ugly work around to make this whole thing work simply with as lower overhead as possible.
 
 It requrires a whole bunch of very specific versions of libraries for reference I have included the requirements.txt for you.  The easy fix is to make a virtual environment and install the requirements as follows. 
 
+
+## Installation ##
 clone this git hub or just download the requirements.txt and move it into the root of the directory where you want your script to live then create a virtual environment as follows:
 
 `python3 -m venv .plotter`
@@ -52,6 +57,8 @@ so use your favourite editor (nano in my case) to modify imshow_utils.py assumin
 You should see the following code and you need to simply comment out `np.bool8: (False, True),` it should be some 23 lines down or so in the definition of `_integer_range`
 
 <img width="985" alt="Screenshot 2024-09-09 at 16 02 39" src="https://github.com/user-attachments/assets/0473ef4a-adc1-44ba-b9a2-f5c82c8bb418">
+
+## Useage ##
 
 With this all done you should be able to now execute the script specifying the location of your csv files as the example below:
 
